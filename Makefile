@@ -8,14 +8,15 @@ SOURCE := $(TARGET).c
 OBJECTS := $(TARGET).o
 OUTPUT_DIR := test_files/output
 
-exec:$(TARGET)
-	./$(TARGET) test_files/text_test.txt
 
 all:$(TARGET)
 
 $(TARGET):$(OBJECTS)
 	mkdir -p test_files/output/
 	$(CC) $(LFLAGS) $@ $^
+
+exec:$(TARGET)
+	./$(TARGET) test_files/text_test.txt
 
 gdb:$(TARGET)
 	gdbtui -x gdb.txt --args  ./aes test_files/text_test.txt
