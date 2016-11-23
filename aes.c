@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
 
-#define BYTE unsigned char
+#define BYTE uint8_t
+#define BLOCK_LENGTH  16
 
-void printBytes(BYTE b[], int len)
-{
-	int i;
-	for (i = 0; i < len; i++)
-		printf("%d ", b[i]);
-	printf("\n");
-}
-
-/******************************************************************************/
-
-// The following lookup tables and functions are for internal use only!
+/*
+ * The following lookup tables and functions are for internal use only!
+ */
 BYTE AES_Sbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171,
                    118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253,
                    147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154,
@@ -33,36 +28,36 @@ BYTE AES_Sbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 2
 BYTE AES_ShiftRowTab[] = {0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12, 1, 6, 11};
 
 BYTE AES_Sbox_Inv[256];
-BYTE AES_ShiftRowTab_Inv[16];
+BYTE AES_ShiftRowTab_Inv[BLOCK_LENGTH];
 BYTE AES_xtime[256];
 
 void AES_SubBytes(BYTE state[], BYTE sbox[])
 {
 	int i;
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] = sbox[state[i]];
 }
 
 void AES_AddRoundKey(BYTE state[], BYTE rkey[])
 {
 	int i;
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] ^= rkey[i];
 }
 
 void AES_ShiftRows(BYTE state[], BYTE shifttab[])
 {
-	BYTE h[16];
-	memcpy(h, state, 16);
+	BYTE h[BLOCK_LENGTH];
+	memcpy(h, state, BLOCK_LENGTH);
 	int i;
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] = h[shifttab[i]];
 }
 
 void AES_MixColumns(BYTE state[])
 {
 	int i;
-	for (i = 0; i < 16; i += 4) {
+	for (i = 0; i < BLOCK_LENGTH; i += 4) {
 		BYTE s0 = state[i + 0], s1 = state[i + 1];
 		BYTE s2 = state[i + 2], s3 = state[i + 3];
 		BYTE h = s0 ^ s1 ^ s2 ^ s3;
@@ -76,7 +71,7 @@ void AES_MixColumns(BYTE state[])
 void AES_MixColumns_Inv(BYTE state[])
 {
 	int i;
-	for (i = 0; i < 16; i += 4) {
+	for (i = 0; i < BLOCK_LENGTH; i += 4) {
 		BYTE s0 = state[i + 0], s1 = state[i + 1];
 		BYTE s2 = state[i + 2], s3 = state[i + 3];
 		BYTE h = s0 ^ s1 ^ s2 ^ s3;
@@ -90,15 +85,17 @@ void AES_MixColumns_Inv(BYTE state[])
 	}
 }
 
-// AES_Init: initialize the tables needed at runtime.
-// Call this function before the (first) key expansion.
+/*
+ * AES_Init: initialize the tables needed at runtime.
+ * Call this function before the (first) key expansion.
+ */
 void AES_Init()
 {
 	int i;
 	for (i = 0; i < 256; i++)
 		AES_Sbox_Inv[AES_Sbox[i]] = i;
 
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < BLOCK_LENGTH; i++)
 		AES_ShiftRowTab_Inv[AES_ShiftRowTab[i]] = i;
 
 	for (i = 0; i < 128; i++) {
@@ -107,15 +104,20 @@ void AES_Init()
 	}
 }
 
-// AES_Done: release memory reserved by AES_Init.
-// Call this function after the last encryption/decryption operation.
-void AES_Done() {}
+/*
+ * AES_Done: release memory reserved by AES_Init.
+ * Call this function after the last encryption/decryption operation.
+ */
+void AES_Done()
+{
+	/*It dose nothing here*/
+}
 
 /* AES_ExpandKey: expand a cipher key. Depending on the desired encryption
-   strength of 128, 192 or 256 bits 'key' has to be a byte array of length
-   16, 24 or 32, respectively. The key expansion is done "in place", meaning
-   that the array 'key' is modified.
-*/
+ * strength of 128, 192 or 256 bits 'key' has to be a byte array of length
+ * 16, 24 or 32, respectively. The key expansion is done "in place", meaning
+ * that the array 'key' is modified.
+ */
 int AES_ExpandKey(BYTE key[], int keyLen)
 {
 	int kl = keyLen, ks, Rcon = 1, i, j;
@@ -143,7 +145,7 @@ int AES_ExpandKey(BYTE key[], int keyLen)
 			memcpy(temp, temp2, 4);
 			if ((Rcon <<= 1) >= 256)
 				Rcon ^= 0x11b;
-		} else if ((kl > 24) && (i % kl == 16)) {
+		} else if ((kl > 24) && (i % kl == BLOCK_LENGTH)) {
 			temp2[0] = AES_Sbox[temp[0]];
 			temp2[1] = AES_Sbox[temp[1]];
 			temp2[2] = AES_Sbox[temp[2]];
@@ -156,13 +158,14 @@ int AES_ExpandKey(BYTE key[], int keyLen)
 	return ks;
 }
 
-// AES_Encrypt: encrypt the 16 byte array 'block' with the previously expanded key 'key'.
+/*
+ * AES_Encrypt: encrypt the 16 byte array 'block' with the previously expanded key 'key'.
+ */
 void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 {
 	int l = keyLen, i;
-	printBytes(block, 16);
 	AES_AddRoundKey(block, &key[0]);
-	for (i = 16; i < l - 16; i += 16) {
+	for (i = BLOCK_LENGTH; i < l - BLOCK_LENGTH; i += BLOCK_LENGTH) {
 		AES_SubBytes(block, AES_Sbox);
 		AES_ShiftRows(block, AES_ShiftRowTab);
 		AES_MixColumns(block);
@@ -173,14 +176,16 @@ void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 	AES_AddRoundKey(block, &key[i]);
 }
 
-// AES_Decrypt: decrypt the 16 byte array 'block' with the previously expanded key 'key'.
+/*
+ * AES_Decrypt: decrypt the 16 byte array 'block' with the previously expanded key 'key'.
+ */
 void AES_Decrypt(BYTE block[], BYTE key[], int keyLen)
 {
 	int l = keyLen, i;
-	AES_AddRoundKey(block, &key[l - 16]);
+	AES_AddRoundKey(block, &key[l - BLOCK_LENGTH]);
 	AES_ShiftRows(block, AES_ShiftRowTab_Inv);
 	AES_SubBytes(block, AES_Sbox_Inv);
-	for (i = l - 32; i >= 16; i -= 16) {
+	for (i = l - 32; i >= BLOCK_LENGTH; i -= BLOCK_LENGTH) {
 		AES_AddRoundKey(block, &key[i]);
 		AES_MixColumns_Inv(block);
 		AES_ShiftRows(block, AES_ShiftRowTab_Inv);
@@ -189,41 +194,99 @@ void AES_Decrypt(BYTE block[], BYTE key[], int keyLen)
 	AES_AddRoundKey(block, &key[0]);
 }
 
-// ===================== test ============================================
-int main()
+void AES_Verify(FILE *src_file, FILE*dest_file)
+{
+	int read_count_src;
+	int read_count_dest;
+	BYTE block_src[BLOCK_LENGTH];
+	BYTE block_dest[BLOCK_LENGTH];
+	read_count_src = fread(block_src, sizeof(BYTE), sizeof(block_src), src_file);
+	read_count_dest = fread(block_dest, sizeof(BYTE), sizeof(block_dest), dest_file);
+	while (read_count_src > 0) {
+		if (read_count_src == read_count_dest) {
+			if (memcmp(block_src, block_dest, read_count_src) != 0) {
+				fprintf(stderr, "Verify failed!\n");
+				exit(EXIT_FAILURE);
+			}
+			read_count_src = fread(block_src, sizeof(BYTE), sizeof(block_src), src_file);
+			read_count_dest = fread(block_dest, sizeof(BYTE), sizeof(block_dest), dest_file);
+		} else {
+			fprintf(stderr, "Verify failed!\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	printf("Verify SUCCESS!\n");
+}
+
+int main(int argc, char **argv)
 {
 	int i;
+	int read_count;
+	BYTE block[BLOCK_LENGTH];
+	BYTE key[BLOCK_LENGTH * (14 + 1)];
+	int keyLen = 32;
+    FILE* output_file_decryption; 
+	FILE* input_file = fopen(argv[1], "rb");
+	FILE* output_file_encryption = fopen("test_files/output/output_file_encryption", "wb");
+	if (input_file == NULL) {
+		fprintf(stderr, "Open input file error!\n");
+		exit(EXIT_FAILURE);
+	}
+	if (output_file_encryption == NULL) {
+		fprintf(stderr, "Open output file error!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	AES_Init();
-
-	BYTE block[16];
-	for (i = 0; i < 16; i++)
-		block[i] = 0x11 * i;
-
-	printf("原始訊息：");
-	printBytes(block, 16);
-
-	BYTE key[16 * (14 + 1)];
-	int keyLen = 32, blockLen = 16;
-	for (i = 0; i < keyLen; i++)
+	for (i = 0; i < keyLen; i++) {
 		key[i] = i;
-
-	printf("原始金鑰：");
-	printBytes(key, keyLen);
+	}
 
 	int expandKeyLen = AES_ExpandKey(key, keyLen);
 
-	printf("展開金鑰：");
-	printBytes(key, expandKeyLen);
+	/*Encrpyt the whole input file*/
+	read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
+	while (read_count > 0) {
+		if (read_count == BLOCK_LENGTH) {
+			/*Encryption*/
+			AES_Encrypt(block, key, expandKeyLen);
+		}
+		fwrite(block, sizeof(BYTE), read_count, output_file_encryption);
+		/*next iteration*/
+		read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
+	}
 
-	AES_Encrypt(block, key, expandKeyLen);
 
-	printf("加密完後：");
-	printBytes(block, blockLen);
+	fclose(output_file_encryption);
+	output_file_encryption = fopen("test_files/output/output_file_encryption", "rb");
+	if (output_file_encryption == NULL) {
+		fprintf(stderr, "Open output file error!\n");
+		exit(EXIT_FAILURE);
+	}
+	output_file_decryption = fopen("test_files/output/output_file_decryption", "wb");
+	if (output_file_decryption == NULL) {
+		fprintf(stderr, "Open output file error!\n");
+		exit(EXIT_FAILURE);
+	}
+	/*Decrpyt the whole encrypted file*/
+	read_count = fread(block, sizeof(BYTE), sizeof(block), output_file_encryption);
+	while (read_count > 0) {
+		if (read_count == BLOCK_LENGTH) {
+			/*Decryption*/
+			AES_Decrypt(block, key, expandKeyLen);
+		}
+		fwrite(block, sizeof(BYTE), read_count, output_file_decryption);
+		/*next iteration*/
+		read_count = fread(block, sizeof(BYTE), sizeof(block), output_file_encryption);
+	}
 
-	AES_Decrypt(block, key, expandKeyLen);
+	fclose(output_file_decryption);
+	fclose(output_file_encryption);
 
-	printf("解密完後：");
-	printBytes(block, blockLen);
-
+	/*Verify the decryped file whether it is as same as the original input file*/
+	output_file_decryption = fopen("test_files/output/output_file_decryption", "rb");
+	AES_Verify(input_file, output_file_decryption);
 	AES_Done();
+	fclose(input_file);
+	fclose(output_file_decryption);
 }
