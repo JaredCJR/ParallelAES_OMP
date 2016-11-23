@@ -9,7 +9,7 @@ OBJECTS := $(TARGET).o
 OUTPUT_DIR := test_files/output
 
 exec:$(TARGET)
-	./$(TARGET) test_files/news_2.txt
+	./$(TARGET) test_files/text_test.txt
 
 all:$(TARGET)
 
@@ -17,7 +17,7 @@ $(TARGET):$(OBJECTS)
 	$(CC) $(LFLAGS) $@ $^
 
 gdb:$(TARGET)
-	gdbtui -x gdb.txt --args  ./aes test_files/news_2.txt
+	gdbtui -x gdb.txt --args  ./aes test_files/text_test.txt
 
 
 $(OBJECTS):$(SOURCE)
