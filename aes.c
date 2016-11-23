@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/time.h>
 
 #define BYTE uint8_t
 #define BLOCK_LENGTH  16
@@ -225,6 +226,10 @@ int main(int argc, char **argv)
 	BYTE block[BLOCK_LENGTH];
 	BYTE key[BLOCK_LENGTH * (14 + 1)];
 	int keyLen = 32;
+    struct timeval time_start;
+    struct timeval time_end;
+    double time_diff;
+
     FILE* output_file_decryption; 
 	FILE* input_file = fopen(argv[1], "rb");
 	FILE* output_file_encryption = fopen("test_files/output/output_file_encryption", "wb");
@@ -237,6 +242,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+    gettimeofday(&time_start,NULL);
 	AES_Init();
 	for (i = 0; i < keyLen; i++) {
 		key[i] = i;
@@ -282,10 +288,13 @@ int main(int argc, char **argv)
 
 	fclose(output_file_decryption);
 	fclose(output_file_encryption);
+    gettimeofday(&time_end,NULL);
 
 	/*Verify the decryped file whether it is as same as the original input file*/
 	output_file_decryption = fopen("test_files/output/output_file_decryption", "rb");
 	AES_Verify(input_file, output_file_decryption);
+    time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
+    printf("Encrytion+Decryption takes: %lf secs\n",time_diff);
 	AES_Done();
 	fclose(input_file);
 	fclose(output_file_decryption);
