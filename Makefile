@@ -14,6 +14,7 @@ exec:$(TARGET)
 all:$(TARGET)
 
 $(TARGET):$(OBJECTS)
+	mkdir -p test_files/output/
 	$(CC) $(LFLAGS) $@ $^
 
 gdb:$(TARGET)
