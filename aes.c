@@ -242,14 +242,14 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-    gettimeofday(&time_start,NULL);
 	AES_Init();
 	for (i = 0; i < keyLen; i++) {
 		key[i] = i;
 	}
 
 	int expandKeyLen = AES_ExpandKey(key, keyLen);
-
+    /*Start counting time*/
+    gettimeofday(&time_start,NULL);
 	/*Encrpyt the whole input file*/
 	read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
 	while (read_count > 0) {
@@ -261,6 +261,13 @@ int main(int argc, char **argv)
 		/*next iteration*/
 		read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
 	}
+    /*End of counting time*/
+    gettimeofday(&time_end,NULL);
+    time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
+    printf("Encrytion takes: %lf secs\n",time_diff);
+    printf("===============================================\n");
+    printf("DO NOT do Parallelization for Decryption,this process is for Verification\n");
+    printf("Decrypting for Verification...please wait\n");
 
 
 	fclose(output_file_encryption);
@@ -288,13 +295,10 @@ int main(int argc, char **argv)
 
 	fclose(output_file_decryption);
 	fclose(output_file_encryption);
-    gettimeofday(&time_end,NULL);
 
 	/*Verify the decryped file whether it is as same as the original input file*/
 	output_file_decryption = fopen("test_files/output/output_file_decryption", "rb");
 	AES_Verify(input_file, output_file_decryption);
-    time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
-    printf("Encrytion+Decryption takes: %lf secs\n",time_diff);
 	AES_Done();
 	fclose(input_file);
 	fclose(output_file_decryption);
