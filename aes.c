@@ -285,7 +285,7 @@ int main(int argc, char **argv)
     gettimeofday(&time_end,NULL);
     time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
 
-    printf("Encrytion takes: %lf secs\n",time_diff);
+    printf("Encrpytion takes: %lf secs\n",time_diff);
     printf("===============================================\n");
     printf("DO NOT do Parallelization for Decryption,this process is for Verification\n");
     printf("Decrypting for Verification...please wait\n");
