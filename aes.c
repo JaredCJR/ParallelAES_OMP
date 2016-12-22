@@ -281,19 +281,19 @@ int main(int argc, char **argv)
         p2block = inputs + i*BLOCK_LENGTH;
         AES_Encrypt(p2block, key, expandKeyLen);
     }
-    /*write the encrypted memory block into disk*/
-    fwrite(inputs, sizeof(BYTE), file_size, output_file_encryption);
-
     /*End of counting time*/
     gettimeofday(&time_end,NULL);
     time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
+
     printf("Encrytion takes: %lf secs\n",time_diff);
     printf("===============================================\n");
     printf("DO NOT do Parallelization for Decryption,this process is for Verification\n");
     printf("Decrypting for Verification...please wait\n");
 
-
+    /*write the encrypted memory block into disk*/
+    fwrite(inputs, sizeof(BYTE), file_size, output_file_encryption);
 	fclose(output_file_encryption);
+
 	output_file_encryption = fopen("test_files/output/output_file_encryption", "rb");
 	if (output_file_encryption == NULL) {
 		fprintf(stderr, "Open output file error!\n");
