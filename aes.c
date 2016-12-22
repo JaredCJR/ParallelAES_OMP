@@ -7,6 +7,8 @@
 
 #define BYTE uint8_t
 #define BLOCK_LENGTH  16
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
 
 /*
  * The following lookup tables and functions are for internal use only!
@@ -206,17 +208,17 @@ void AES_Verify(FILE *src_file, FILE*dest_file)
 	while (read_count_src > 0) {
 		if (read_count_src == read_count_dest) {
 			if (memcmp(block_src, block_dest, read_count_src) != 0) {
-				fprintf(stderr, "Verify failed!\n");
+			    fprintf(stderr, KRED "Verification FAIL!\n");
 				exit(EXIT_FAILURE);
 			}
 			read_count_src = fread(block_src, sizeof(BYTE), sizeof(block_src), src_file);
 			read_count_dest = fread(block_dest, sizeof(BYTE), sizeof(block_dest), dest_file);
 		} else {
-			fprintf(stderr, "Verify failed!\n");
+			fprintf(stderr, KRED "Verification FAIL!\n");
 			exit(EXIT_FAILURE);
 		}
 	}
-	printf("Verify SUCCESS!\n");
+	printf( KGRN "Verification SUCCESS!\n");
 }
 
 int main(int argc, char **argv)
@@ -225,13 +227,14 @@ int main(int argc, char **argv)
 	int read_count;
 	BYTE block[BLOCK_LENGTH];
 	BYTE key[BLOCK_LENGTH * (14 + 1)];
-	int keyLen = 32;
+	int keyLen = BLOCK_LENGTH;
     struct timeval time_start;
     struct timeval time_end;
     double time_diff;
 
     FILE* output_file_decryption; 
 	FILE* input_file = fopen(argv[1], "rb");
+	FILE* input_file_2 = fopen(argv[1], "rb");
 	FILE* output_file_encryption = fopen("test_files/output/output_file_encryption", "wb");
 	if (input_file == NULL) {
 		fprintf(stderr, "Open input file error!\n");
@@ -248,19 +251,39 @@ int main(int argc, char **argv)
 	}
 
 	int expandKeyLen = AES_ExpandKey(key, keyLen);
-    /*Start counting time*/
-    gettimeofday(&time_start,NULL);
-	/*Encrpyt the whole input file*/
-	read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
+    /*get file size*/
+    uint32_t BLOCK_count = 0;
+    uint32_t last_BLOCK_size = 0;
+	read_count = fread(block, sizeof(BYTE), sizeof(block), input_file_2);
 	while (read_count > 0) {
 		if (read_count == BLOCK_LENGTH) {
-			/*Encryption*/
-			AES_Encrypt(block, key, expandKeyLen);
-		}
-		fwrite(block, sizeof(BYTE), read_count, output_file_encryption);
+            BLOCK_count++;
+		}else {
+            last_BLOCK_size = read_count;
+        }
 		/*next iteration*/
-		read_count = fread(block, sizeof(BYTE), sizeof(block), input_file);
+		read_count = fread(block, sizeof(BYTE), sizeof(block), input_file_2);
 	}
+    fclose(input_file_2);
+    uint32_t file_size = sizeof(BYTE)*(BLOCK_count*BLOCK_LENGTH+last_BLOCK_size);
+    printf("file size:%u bytes\n",file_size);
+    BYTE *inputs = (BYTE*)malloc(file_size);
+    BYTE *p2block;
+    /*load file into ram*/
+	read_count = fread(inputs, sizeof(BYTE), file_size, input_file);
+    fclose(input_file);
+
+    /*Start counting time*/
+    gettimeofday(&time_start,NULL);
+
+	/*Encrpyt the whole input file*/
+    for(uint32_t i = 0;i < BLOCK_count;i++) {
+        p2block = inputs + i*BLOCK_LENGTH;
+        AES_Encrypt(p2block, key, expandKeyLen);
+    }
+    /*write the encrypted memory block into disk*/
+    fwrite(inputs, sizeof(BYTE), file_size, output_file_encryption);
+
     /*End of counting time*/
     gettimeofday(&time_end,NULL);
     time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
@@ -298,8 +321,10 @@ int main(int argc, char **argv)
 
 	/*Verify the decryped file whether it is as same as the original input file*/
 	output_file_decryption = fopen("test_files/output/output_file_decryption", "rb");
+	input_file = fopen(argv[1], "rb");
 	AES_Verify(input_file, output_file_decryption);
 	AES_Done();
 	fclose(input_file);
 	fclose(output_file_decryption);
+    free(inputs);
 }
