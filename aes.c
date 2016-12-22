@@ -121,7 +121,7 @@ void AES_Done()
  */
 int AES_ExpandKey(BYTE key[], int keyLen)
 {
-	int kl = keyLen, ks, Rcon = 1, i, j;
+	int kl = keyLen, ks = 0, Rcon = 1, i, j;
 	BYTE temp[4], temp2[4];
 	switch (kl) {
 	case 16:
