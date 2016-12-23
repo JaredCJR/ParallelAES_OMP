@@ -206,6 +206,7 @@ void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 void AES_Encrypt_all(BYTE *inputs,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
 {
     BYTE *p2block;
+#pragma omp parallel for
     for(uint32_t i = 0;i < BLOCK_count;i++) {
         p2block = inputs + i*BLOCK_LENGTH;
         AES_Encrypt(p2block, key, expandKeyLen);
