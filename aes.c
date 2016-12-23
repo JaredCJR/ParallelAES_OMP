@@ -166,19 +166,51 @@ int AES_ExpandKey(BYTE key[], int keyLen)
  */
 void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 {
-	int l = keyLen, i;
+	BYTE h0[BLOCK_LENGTH];
+    BYTE h1;
 	AES_AddRoundKey(block, &key[0]);
-	for (i = BLOCK_LENGTH; i < l - BLOCK_LENGTH; i += BLOCK_LENGTH) {
-		AES_SubBytes(block, AES_Sbox);
-		AES_ShiftRows(block, AES_ShiftRowTab);
-		AES_MixColumns(block);
-		AES_AddRoundKey(block, &key[i]);
+	for (int i = BLOCK_LENGTH; i < keyLen - BLOCK_LENGTH; i += BLOCK_LENGTH) {
+		//AES_SubBytes(block, AES_Sbox);
+	    for (int j = 0; j < BLOCK_LENGTH; j++) {
+		    block[j] = AES_Sbox[block[j]];
+        }
+
+		//AES_ShiftRows(block, AES_ShiftRowTab);
+	    memcpy(h0, block, BLOCK_LENGTH);
+	    for (int j = 0; j < BLOCK_LENGTH; j++) {
+		    block[j] = h0[AES_ShiftRowTab[j]];
+        }
+
+		//AES_MixColumns(block);
+	    for (int j = 0; j < BLOCK_LENGTH; j += 4) {
+		    BYTE s0 = block[j + 0], s1 = block[j + 1];
+		    BYTE s2 = block[j + 2], s3 = block[j + 3];
+		    h1 = s0 ^ s1 ^ s2 ^ s3;
+		    block[j + 0] ^= h1 ^ AES_xtime[s0 ^ s1];
+		    block[j + 1] ^= h1 ^ AES_xtime[s1 ^ s2];
+		    block[j + 2] ^= h1 ^ AES_xtime[s2 ^ s3];
+		    block[j + 3] ^= h1 ^ AES_xtime[s3 ^ s0];
+	    }
+
+		//AES_AddRoundKey(block, &key[i]);
+	    for (int j = 0; j < BLOCK_LENGTH; j++)
+        {
+		    block[j] ^= key[i+j];
+        }
 	}
 	AES_SubBytes(block, AES_Sbox);
 	AES_ShiftRows(block, AES_ShiftRowTab);
-	AES_AddRoundKey(block, &key[i]);
+	AES_AddRoundKey(block, &key[keyLen-BLOCK_LENGTH]);
 }
 
+void AES_Encrypt_all(BYTE *inputs,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
+{
+    BYTE *p2block;
+    for(uint32_t i = 0;i < BLOCK_count;i++) {
+        p2block = inputs + i*BLOCK_LENGTH;
+        AES_Encrypt(p2block, key, expandKeyLen);
+    }
+}
 /*
  * AES_Decrypt: decrypt the 16 byte array 'block' with the previously expanded key 'key'.
  */
@@ -268,7 +300,6 @@ int main(int argc, char **argv)
     uint32_t file_size = sizeof(BYTE)*(BLOCK_count*BLOCK_LENGTH+last_BLOCK_size);
     printf("file size:%u bytes\n",file_size);
     BYTE *inputs = (BYTE*)malloc(file_size);
-    BYTE *p2block;
     /*load file into ram*/
 	read_count = fread(inputs, sizeof(BYTE), file_size, input_file);
     fclose(input_file);
@@ -277,10 +308,8 @@ int main(int argc, char **argv)
     gettimeofday(&time_start,NULL);
 
 	/*Encrpyt the whole input file*/
-    for(uint32_t i = 0;i < BLOCK_count;i++) {
-        p2block = inputs + i*BLOCK_LENGTH;
-        AES_Encrypt(p2block, key, expandKeyLen);
-    }
+    AES_Encrypt_all(inputs,key,expandKeyLen,BLOCK_count);
+
     /*End of counting time*/
     gettimeofday(&time_end,NULL);
     time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
