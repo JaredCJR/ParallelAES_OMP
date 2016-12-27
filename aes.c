@@ -193,7 +193,7 @@ void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 	    }
 
 		//AES_AddRoundKey(block, &key[i]);
-#pragma omp simd
+//#pragma omp simd
 	    for (int j = 0; j < BLOCK_LENGTH; j++)
         {
 		    block[j] ^= key[i+j];
