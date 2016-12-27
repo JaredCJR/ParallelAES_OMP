@@ -9,6 +9,8 @@
 #define BLOCK_LENGTH  16
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KRESET "\x1B[0m"
 
 /*
  * The following lookup tables and functions are for internal use only!
@@ -260,9 +262,12 @@ int main(int argc, char **argv)
 	BYTE block[BLOCK_LENGTH];
 	BYTE key[BLOCK_LENGTH * (14 + 1)];
 	int keyLen = BLOCK_LENGTH;
-    struct timeval time_start;
-    struct timeval time_end;
-    double time_diff;
+    struct timeval time_start_1;
+    struct timeval time_end_1;
+    double time_diff_1;
+    struct timeval time_start_2;
+    struct timeval time_end_2;
+    double time_diff_2;
 
     FILE* output_file_decryption; 
 	FILE* input_file = fopen(argv[1], "rb");
@@ -286,6 +291,7 @@ int main(int argc, char **argv)
     /*get file size*/
     uint32_t BLOCK_count = 0;
     uint32_t last_BLOCK_size = 0;
+    gettimeofday(&time_start_2,NULL);
 	read_count = fread(block, sizeof(BYTE), sizeof(block), input_file_2);
 	while (read_count > 0) {
 		if (read_count == BLOCK_LENGTH) {
@@ -305,16 +311,20 @@ int main(int argc, char **argv)
     fclose(input_file);
 
     /*Start counting time*/
-    gettimeofday(&time_start,NULL);
+    gettimeofday(&time_start_1,NULL);
 
 	/*Encrpyt the whole input file*/
     AES_Encrypt_all(inputs,key,expandKeyLen,BLOCK_count);
 
     /*End of counting time*/
-    gettimeofday(&time_end,NULL);
-    time_diff = (1000000.0 * (double)(time_end.tv_sec-time_start.tv_sec)+(double)(time_end.tv_usec-time_start.tv_usec))/1000000.0;
+    gettimeofday(&time_end_1,NULL);
+    gettimeofday(&time_end_2,NULL);
+    time_diff_1 = (1000000.0 * (double)(time_end_1.tv_sec-time_start_1.tv_sec)+(double)(time_end_1.tv_usec-time_start_1.tv_usec))/1000000.0;
+    time_diff_2 = (1000000.0 * (double)(time_end_2.tv_sec-time_start_2.tv_sec)+(double)(time_end_2.tv_usec-time_start_2.tv_usec))/1000000.0;
 
-    printf("Encrpytion takes: %lf secs\n",time_diff);
+    printf(KYEL "Encrpytion without disk I/O takes: %lf secs\n" KRESET,time_diff_1);
+    printf(KYEL "Encrpytion with    disk I/O takes: %lf secs\n" KRESET,time_diff_2);
+    printf(KYEL "disk I/O takes: %lf secs(with - without)\n" KRESET,time_diff_2-time_diff_1);
     printf("===============================================\n");
     printf("DO NOT do Parallelization for Decryption,this process is for Verification\n");
     printf("Decrypting for Verification...please wait\n");
