@@ -7,7 +7,7 @@ CFLAGS := -fopenmp -O3 -std=gnu99 -Wall -Werror -c
 #CFLAGS := -fopenmp -O0 -g3 -std=gnu99 -Wall -Werror -c
 LFLAGS := -fopenmp -o
 
-TARGET := aes
+TARGET := aes_gpugg
 SOURCE := $(TARGET).c
 OBJECTS := $(TARGET).o
 OUTPUT_DIR := test_files/output
