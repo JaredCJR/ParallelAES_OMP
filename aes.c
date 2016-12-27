@@ -163,56 +163,58 @@ int AES_ExpandKey(BYTE key[], int keyLen)
 	return ks;
 }
 
-/*
- * AES_Encrypt: encrypt the 16 byte array 'block' with the previously expanded key 'key'.
- */
-void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
+
+void AES_Encrypt_all(BYTE *inputs,uint32_t file_size,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
 {
 	BYTE h0[BLOCK_LENGTH];
     BYTE h1;
-	AES_AddRoundKey(block, &key[0]);
-	for (int i = BLOCK_LENGTH; i < keyLen - BLOCK_LENGTH; i += BLOCK_LENGTH) {
-		//AES_SubBytes(block, AES_Sbox);
-	    for (int j = 0; j < BLOCK_LENGTH; j++) {
-		    block[j] = AES_Sbox[block[j]];
-        }
-
-		//AES_ShiftRows(block, AES_ShiftRowTab);
-	    memcpy(h0, block, BLOCK_LENGTH);
-	    for (int j = 0; j < BLOCK_LENGTH; j++) {
-		    block[j] = h0[AES_ShiftRowTab[j]];
-        }
-
-		//AES_MixColumns(block);
-	    for (int j = 0; j < BLOCK_LENGTH; j += 4) {
-		    BYTE s0 = block[j + 0], s1 = block[j + 1];
-		    BYTE s2 = block[j + 2], s3 = block[j + 3];
-		    h1 = s0 ^ s1 ^ s2 ^ s3;
-		    block[j + 0] ^= h1 ^ AES_xtime[s0 ^ s1];
-		    block[j + 1] ^= h1 ^ AES_xtime[s1 ^ s2];
-		    block[j + 2] ^= h1 ^ AES_xtime[s2 ^ s3];
-		    block[j + 3] ^= h1 ^ AES_xtime[s3 ^ s0];
-	    }
-
-		//AES_AddRoundKey(block, &key[i]);
-//#pragma omp simd
+    unsigned int current_idx;
+    for(uint32_t i = 0;i < BLOCK_count;i++) {
+        current_idx = i*BLOCK_LENGTH;
+	    //AES_AddRoundKey(block, &key[0]);
 	    for (int j = 0; j < BLOCK_LENGTH; j++)
         {
-		    block[j] ^= key[i+j];
+	        inputs[current_idx +j] ^= key[j];
         }
-	}
-	AES_SubBytes(block, AES_Sbox);
-	AES_ShiftRows(block, AES_ShiftRowTab);
-	AES_AddRoundKey(block, &key[keyLen-BLOCK_LENGTH]);
-}
+	    for (int k = BLOCK_LENGTH; k < expandKeyLen - BLOCK_LENGTH; k += BLOCK_LENGTH) {
+		    //AES_SubBytes(block, AES_Sbox);
+		    //AES_ShiftRows(block, AES_ShiftRowTab);
+            for(int j = 0;j < BLOCK_LENGTH;j++) {
+		        inputs[current_idx + j] = AES_Sbox[inputs[current_idx + j]];
+                h0[j] = inputs[current_idx + j];
+            }
+	        for (int j = 0; j < BLOCK_LENGTH; j++) {
+		        inputs[current_idx + j] = h0[AES_ShiftRowTab[j]];
+            }
 
-void AES_Encrypt_all(BYTE *inputs,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
-{
-    BYTE *p2block;
-#pragma omp parallel for num_threads(4)
-    for(uint32_t i = 0;i < BLOCK_count;i++) {
-        p2block = inputs + i*BLOCK_LENGTH;
-        AES_Encrypt(p2block, key, expandKeyLen);
+		    //AES_MixColumns(block);
+	        for (int j = 0; j < BLOCK_LENGTH; j += 4) {
+		        BYTE s0 = inputs[current_idx + j + 0], s1 = inputs[current_idx + j + 1];
+		        BYTE s2 = inputs[current_idx + j + 2], s3 = inputs[current_idx + j + 3];
+		        h1 = s0 ^ s1 ^ s2 ^ s3;
+		        inputs[current_idx + j + 0] ^= h1 ^ AES_xtime[s0 ^ s1];
+		        inputs[current_idx + j + 1] ^= h1 ^ AES_xtime[s1 ^ s2];
+		        inputs[current_idx + j + 2] ^= h1 ^ AES_xtime[s2 ^ s3];
+		        inputs[current_idx + j + 3] ^= h1 ^ AES_xtime[s3 ^ s0];
+	        }
+
+		    //AES_AddRoundKey(block, &key[i]);
+	        for (int j = 0; j < BLOCK_LENGTH; j++)
+            {
+		        inputs[current_idx + j] ^= key[k+j];
+            }
+	    }
+	    //AES_SubBytes(block, AES_Sbox);
+	    //AES_ShiftRows(block, AES_ShiftRowTab);
+        for(int j = 0;j < BLOCK_LENGTH;j++)
+        {
+	        inputs[current_idx + j] = AES_Sbox[inputs[current_idx + j]];
+            h0[j] = inputs[current_idx + j];
+        }
+	    for (int j = 0; j < BLOCK_LENGTH; j++) {
+	        inputs[current_idx + j] = h0[AES_ShiftRowTab[j]];
+	        inputs[current_idx + j] ^= key[expandKeyLen - BLOCK_LENGTH+j];
+        }
     }
 }
 /*
@@ -316,7 +318,7 @@ int main(int argc, char **argv)
     gettimeofday(&time_start_1,NULL);
 
 	/*Encrpyt the whole input file*/
-    AES_Encrypt_all(inputs,key,expandKeyLen,BLOCK_count);
+    AES_Encrypt_all(inputs,file_size,key,expandKeyLen,BLOCK_count);
 
     /*End of counting time*/
     gettimeofday(&time_end_1,NULL);
