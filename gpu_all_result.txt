@@ -1,0 +1,441 @@
+***************************************************
+FILE: 0.1mb_file
+***************************************************
+###############case 1
+file size:102401 bytes
+[33mEncrpytion without disk I/O takes: 0.104502 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.104700 secs
+[0m[33mdisk I/O takes: 0.000198 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:102401 bytes
+[33mEncrpytion without disk I/O takes: 0.103245 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.103441 secs
+[0m[33mdisk I/O takes: 0.000196 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:102401 bytes
+[33mEncrpytion without disk I/O takes: 0.102827 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.103027 secs
+[0m[33mdisk I/O takes: 0.000200 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:102401 bytes
+[33mEncrpytion without disk I/O takes: 0.102684 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.102881 secs
+[0m[33mdisk I/O takes: 0.000197 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:102401 bytes
+[33mEncrpytion without disk I/O takes: 0.103296 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.103496 secs
+[0m[33mdisk I/O takes: 0.000200 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 100mb_file
+***************************************************
+###############case 1
+file size:104929280 bytes
+[33mEncrpytion without disk I/O takes: 0.803529 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.983839 secs
+[0m[33mdisk I/O takes: 0.180310 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:104929280 bytes
+[33mEncrpytion without disk I/O takes: 0.826921 secs
+[0m[33mEncrpytion with    disk I/O takes: 1.007872 secs
+[0m[33mdisk I/O takes: 0.180951 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:104929280 bytes
+[33mEncrpytion without disk I/O takes: 0.820489 secs
+[0m[33mEncrpytion with    disk I/O takes: 1.002866 secs
+[0m[33mdisk I/O takes: 0.182377 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:104929280 bytes
+[33mEncrpytion without disk I/O takes: 0.840211 secs
+[0m[33mEncrpytion with    disk I/O takes: 1.020712 secs
+[0m[33mdisk I/O takes: 0.180501 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:104929280 bytes
+[33mEncrpytion without disk I/O takes: 0.859462 secs
+[0m[33mEncrpytion with    disk I/O takes: 1.040511 secs
+[0m[33mdisk I/O takes: 0.181049 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 10mb_file
+***************************************************
+###############case 1
+file size:10485760 bytes
+[33mEncrpytion without disk I/O takes: 0.184597 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.202948 secs
+[0m[33mdisk I/O takes: 0.018351 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:10485760 bytes
+[33mEncrpytion without disk I/O takes: 0.182728 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.201057 secs
+[0m[33mdisk I/O takes: 0.018329 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:10485760 bytes
+[33mEncrpytion without disk I/O takes: 0.183346 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.201956 secs
+[0m[33mdisk I/O takes: 0.018610 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:10485760 bytes
+[33mEncrpytion without disk I/O takes: 0.171820 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.190413 secs
+[0m[33mdisk I/O takes: 0.018593 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:10485760 bytes
+[33mEncrpytion without disk I/O takes: 0.179861 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.198227 secs
+[0m[33mdisk I/O takes: 0.018366 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 1200mb_file
+***************************************************
+###############case 1
+file size:1259182080 bytes
+[33mEncrpytion without disk I/O takes: 8.496316 secs
+[0m[33mEncrpytion with    disk I/O takes: 10.645375 secs
+[0m[33mdisk I/O takes: 2.149059 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:1259182080 bytes
+[33mEncrpytion without disk I/O takes: 8.481172 secs
+[0m[33mEncrpytion with    disk I/O takes: 10.633142 secs
+[0m[33mdisk I/O takes: 2.151970 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:1259182080 bytes
+[33mEncrpytion without disk I/O takes: 8.489368 secs
+[0m[33mEncrpytion with    disk I/O takes: 10.633196 secs
+[0m[33mdisk I/O takes: 2.143828 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:1259182080 bytes
+[33mEncrpytion without disk I/O takes: 8.841455 secs
+[0m[33mEncrpytion with    disk I/O takes: 10.993390 secs
+[0m[33mdisk I/O takes: 2.151935 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:1259182080 bytes
+[33mEncrpytion without disk I/O takes: 8.469254 secs
+[0m[33mEncrpytion with    disk I/O takes: 10.617467 secs
+[0m[33mdisk I/O takes: 2.148213 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 20mb_file
+***************************************************
+###############case 1
+file size:20981760 bytes
+[33mEncrpytion without disk I/O takes: 0.250836 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.293267 secs
+[0m[33mdisk I/O takes: 0.042431 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:20981760 bytes
+[33mEncrpytion without disk I/O takes: 0.250017 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.286409 secs
+[0m[33mdisk I/O takes: 0.036392 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:20981760 bytes
+[33mEncrpytion without disk I/O takes: 0.268411 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.305057 secs
+[0m[33mdisk I/O takes: 0.036646 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:20981760 bytes
+[33mEncrpytion without disk I/O takes: 0.241921 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.278536 secs
+[0m[33mdisk I/O takes: 0.036615 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:20981760 bytes
+[33mEncrpytion without disk I/O takes: 0.274066 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.310596 secs
+[0m[33mdisk I/O takes: 0.036530 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 300mb_file
+***************************************************
+###############case 1
+file size:314798080 bytes
+[33mEncrpytion without disk I/O takes: 2.205705 secs
+[0m[33mEncrpytion with    disk I/O takes: 2.746623 secs
+[0m[33mdisk I/O takes: 0.540918 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:314798080 bytes
+[33mEncrpytion without disk I/O takes: 2.195801 secs
+[0m[33mEncrpytion with    disk I/O takes: 2.732744 secs
+[0m[33mdisk I/O takes: 0.536943 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:314798080 bytes
+[33mEncrpytion without disk I/O takes: 2.205197 secs
+[0m[33mEncrpytion with    disk I/O takes: 2.742550 secs
+[0m[33mdisk I/O takes: 0.537353 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:314798080 bytes
+[33mEncrpytion without disk I/O takes: 2.204857 secs
+[0m[33mEncrpytion with    disk I/O takes: 2.742056 secs
+[0m[33mdisk I/O takes: 0.537199 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:314798080 bytes
+[33mEncrpytion without disk I/O takes: 2.230114 secs
+[0m[33mEncrpytion with    disk I/O takes: 2.768687 secs
+[0m[33mdisk I/O takes: 0.538573 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 50mb_file
+***************************************************
+###############case 1
+file size:52459520 bytes
+[33mEncrpytion without disk I/O takes: 0.466593 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.556767 secs
+[0m[33mdisk I/O takes: 0.090174 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:52459520 bytes
+[33mEncrpytion without disk I/O takes: 0.495792 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.587517 secs
+[0m[33mdisk I/O takes: 0.091725 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:52459520 bytes
+[33mEncrpytion without disk I/O takes: 0.479249 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.560753 secs
+[0m[33mdisk I/O takes: 0.081504 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:52459520 bytes
+[33mEncrpytion without disk I/O takes: 0.484367 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.574230 secs
+[0m[33mdisk I/O takes: 0.089863 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:52459520 bytes
+[33mEncrpytion without disk I/O takes: 0.455434 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.545225 secs
+[0m[33mdisk I/O takes: 0.089791 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: 600mb_file
+***************************************************
+###############case 1
+file size:629585920 bytes
+[33mEncrpytion without disk I/O takes: 4.304606 secs
+[0m[33mEncrpytion with    disk I/O takes: 5.375038 secs
+[0m[33mdisk I/O takes: 1.070432 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:629585920 bytes
+[33mEncrpytion without disk I/O takes: 4.288910 secs
+[0m[33mEncrpytion with    disk I/O takes: 5.359691 secs
+[0m[33mdisk I/O takes: 1.070781 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:629585920 bytes
+[33mEncrpytion without disk I/O takes: 4.319349 secs
+[0m[33mEncrpytion with    disk I/O takes: 5.393848 secs
+[0m[33mdisk I/O takes: 1.074499 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:629585920 bytes
+[33mEncrpytion without disk I/O takes: 4.308286 secs
+[0m[33mEncrpytion with    disk I/O takes: 5.383118 secs
+[0m[33mdisk I/O takes: 1.074832 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:629585920 bytes
+[33mEncrpytion without disk I/O takes: 4.546705 secs
+[0m[33mEncrpytion with    disk I/O takes: 5.577978 secs
+[0m[33mdisk I/O takes: 1.031273 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
+***************************************************
+FILE: text_test.txt
+***************************************************
+###############case 1
+file size:1339 bytes
+[33mEncrpytion without disk I/O takes: 0.108244 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.108259 secs
+[0m[33mdisk I/O takes: 0.000015 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 2
+file size:1339 bytes
+[33mEncrpytion without disk I/O takes: 0.101645 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.101656 secs
+[0m[33mdisk I/O takes: 0.000011 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 3
+file size:1339 bytes
+[33mEncrpytion without disk I/O takes: 0.101735 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.101747 secs
+[0m[33mdisk I/O takes: 0.000012 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 4
+file size:1339 bytes
+[33mEncrpytion without disk I/O takes: 0.101880 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.101891 secs
+[0m[33mdisk I/O takes: 0.000011 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+###############case 5
+file size:1339 bytes
+[33mEncrpytion without disk I/O takes: 0.101794 secs
+[0m[33mEncrpytion with    disk I/O takes: 0.101807 secs
+[0m[33mdisk I/O takes: 0.000013 secs(with - without)
+[0m===============================================
+DO NOT do Parallelization for Decryption,this process is for Verification
+Decrypting for Verification...please wait
+[32mVerification SUCCESS!
+===================================================================================
