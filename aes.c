@@ -5,7 +5,7 @@
 #include <string.h>
 #include <sys/time.h>
 
-#define BYTE uint8_t
+#define BYTE  uint8_t
 #define BLOCK_LENGTH  16
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
@@ -166,10 +166,14 @@ int AES_ExpandKey(BYTE key[], int keyLen)
 
 void AES_Encrypt_all(BYTE *inputs,uint32_t file_size,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
 {
-	BYTE h0[BLOCK_LENGTH];
-    BYTE h1;
-    unsigned int current_idx;
+    unsigned int current_idx = 0;
+#pragma omp target data map(tofrom: inputs[:file_size]) map(to: key[:expandKeyLen],AES_Sbox[:sizeof(AES_Sbox)],AES_ShiftRowTab[:sizeof(AES_ShiftRowTab)])
+{
+    #pragma omp target
+    #pragma omp for
     for(uint32_t i = 0;i < BLOCK_count;i++) {
+	    BYTE h0[BLOCK_LENGTH];
+        BYTE h1;
         current_idx = i*BLOCK_LENGTH;
 	    //AES_AddRoundKey(block, &key[0]);
 	    for (int j = 0; j < BLOCK_LENGTH; j++)
@@ -216,6 +220,7 @@ void AES_Encrypt_all(BYTE *inputs,uint32_t file_size,BYTE *key,int expandKeyLen,
 	        inputs[current_idx + j] ^= key[expandKeyLen - BLOCK_LENGTH+j];
         }
     }
+}
 }
 /*
  * AES_Decrypt: decrypt the 16 byte array 'block' with the previously expanded key 'key'.
@@ -264,7 +269,6 @@ int main(int argc, char **argv)
 	int i;
 	int read_count;
 	BYTE block[BLOCK_LENGTH];
-	BYTE key[BLOCK_LENGTH * (14 + 1)];
 	int keyLen = BLOCK_LENGTH;
     struct timeval time_start_1;
     struct timeval time_end_1;
@@ -272,6 +276,7 @@ int main(int argc, char **argv)
     struct timeval time_start_2;
     struct timeval time_end_2;
     double time_diff_2;
+    BYTE key[BLOCK_LENGTH * (14 + 1)];
 
     FILE* output_file_decryption; 
 	FILE* input_file = fopen(argv[1], "rb");
