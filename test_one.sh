@@ -5,7 +5,7 @@
 test_num=5
 rm -r ./test_files/output
 rm single_result.txt
-test_case=6000mb_file
+test_case=3600mb_file
     echo "***************************************************" >> single_result.txt
     echo "FILE: $test_case" >> single_result.txt
     echo "***************************************************" >> single_result.txt
