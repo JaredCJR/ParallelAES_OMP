@@ -1,13 +1,13 @@
 #CC := gcc
 CC := LIBRARY_PATH=~/forge/openmp4/llvm/install/lib ~/forge/openmp4/llvm/build/bin/clang-3.8
 #testing flags
-CFLAGS := -fopenmp -O3 -std=gnu99 -Wall -Werror -c
+CFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -O3 -std=gnu99 -Wall -Werror -c
 
 #debug flags
-#CFLAGS := -fopenmp -O0 -g3 -std=gnu99 -Wall -Werror -c
-LFLAGS := -fopenmp -o
+#CFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -O0 -g3 -std=gnu99 -Wall -Werror -c
+LFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -o
 
-TARGET := aes_gpugg
+TARGET := aes
 SOURCE := $(TARGET).c
 OBJECTS := $(TARGET).o
 OUTPUT_DIR := test_files/output
@@ -23,7 +23,7 @@ exec:$(TARGET)
 	./$(TARGET) test_files/text_test.txt
 
 gdb:$(TARGET)
-	gdbtui -x gdb.txt --args  ./aes test_files/text_test.txt
+	gdbtui -x gdb.txt --args  ./aes_gpugg ../test_files/text_test.txt
 
 
 $(OBJECTS):$(SOURCE)

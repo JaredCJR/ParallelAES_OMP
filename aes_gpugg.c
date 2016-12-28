@@ -12,12 +12,25 @@
 #define KYEL  "\x1B[33m"
 #define KRESET "\x1B[0m"
    
+/*
+ *
+ * functions
+ *
+ * */
+#pragma omp declare target
+void AES_AddRoundKey(BYTE[], BYTE[]);
+void AES_SubBytes(BYTE[], BYTE[]);
+void AES_ShiftRows(BYTE[], BYTE[]);
+void AES_Encrypt(BYTE block[], BYTE key[], int keyLen);
+#pragma omp end declare target
+
 
 
 /*
  * The following lookup tables and functions are for internal use only!
  */
-BYTE AES_Sbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171,
+#pragma omp declare target
+BYTE AES_Sbox[256] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171,
                    118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253,
                    147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154,
                    7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227,
@@ -32,28 +45,32 @@ BYTE AES_Sbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 2
                    137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22
                   };
 
-BYTE AES_ShiftRowTab[] = {0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12, 1, 6, 11};
+BYTE AES_ShiftRowTab[16] = {0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12, 1, 6, 11};
 
 BYTE AES_Sbox_Inv[256];
 BYTE AES_ShiftRowTab_Inv[BLOCK_LENGTH];
 BYTE AES_xtime[256];
+#pragma omp end declare target
 
-
-
+#pragma omp declare target
 void AES_SubBytes(BYTE state[], BYTE sbox[])
 {
 	int i;
 	for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] = sbox[state[i]];
 }
+#pragma omp end declare target
 
+#pragma omp declare target
 void AES_AddRoundKey(BYTE state[], BYTE rkey[])
 {
 	int i;
 	for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] ^= rkey[i];
 }
+#pragma omp end declare target
 
+#pragma omp declare target
 void AES_ShiftRows(BYTE state[], BYTE shifttab[])
 {
 	BYTE h[BLOCK_LENGTH];
@@ -62,6 +79,8 @@ void AES_ShiftRows(BYTE state[], BYTE shifttab[])
     for (i = 0; i < BLOCK_LENGTH; i++)
 		state[i] = h[shifttab[i]];
 }
+#pragma omp end declare target
+
 
 void AES_MixColumns(BYTE state[])
 {
@@ -127,6 +146,7 @@ void AES_Done()
  * 16, 24 or 32, respectively. The key expansion is done "in place", meaning
  * that the array 'key' is modified.
  */
+
 int AES_ExpandKey(BYTE key[], int keyLen)
 {
 	int kl = keyLen, ks = 0, Rcon = 1, i, j;
@@ -170,20 +190,17 @@ int AES_ExpandKey(BYTE key[], int keyLen)
 /*
  * AES_Encrypt: encrypt the 16 byte array 'block' with the previously expanded key 'key'.
  */
+#pragma omp declare target
 void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 {
 	BYTE h0[BLOCK_LENGTH];
     BYTE h1;
-//	AES_AddRoundKey(block, &key[0]);
-#pragma omp target data
+
     {    
     AES_AddRoundKey(block, &key[0]);
-#pragma omp target 
-#pragma omp target teams distribute
     for (int i = BLOCK_LENGTH; i < keyLen - BLOCK_LENGTH; i += BLOCK_LENGTH) {
 		//AES_SubBytes(block, AES_Sbox);
-
-	    for (int j = 0; j < BLOCK_LENGTH; j++) {
+        for (int j = 0; j < BLOCK_LENGTH; j++) {
 		    block[j] = AES_Sbox[block[j]];
         }
 
@@ -216,18 +233,20 @@ void AES_Encrypt(BYTE block[], BYTE key[], int keyLen)
 	AES_AddRoundKey(block, &key[keyLen-BLOCK_LENGTH]);
     }
  }
+#pragma omp end declare target
 
 void AES_Encrypt_all(BYTE *inputs,BYTE *key,int expandKeyLen,uint32_t BLOCK_count)
 {
-    BYTE *p2block;
-#pragma omp target data
-//#pragma omp target teams distribute
+    BYTE *p2block; 
+#pragma omp target data device(0) map(tofrom:key,expandKeyLen) map(alloc:p2block)
+    {
+#pragma omp target 
 #pragma omp parallel for
     for(uint32_t i = 0;i < BLOCK_count;i++) {
         p2block = inputs + i*BLOCK_LENGTH;
         AES_Encrypt(p2block, key, expandKeyLen);
     }
-
+    }
 }
 /*
  * AES_Decrypt: decrypt the 16 byte array 'block' with the previously expanded key 'key'.
@@ -299,10 +318,11 @@ int main(int argc, char **argv)
 	}
 
 	AES_Init();
+
 	for (i = 0; i < keyLen; i++) {
 		key[i] = i;
 	}
-
+    
 	int expandKeyLen = AES_ExpandKey(key, keyLen);
     /*get file size*/
     uint32_t BLOCK_count = 0;
