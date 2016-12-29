@@ -7,7 +7,7 @@ CFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -O3 -std=gnu99 -Wall -W
 #CFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -O0 -g3 -std=gnu99 -Wall -Werror -c
 LFLAGS := -fopenmp -omptargets=nvptx64sm_52-nvidia-linux -o
 
-TARGET := aes
+TARGET := gpu
 SOURCE := $(TARGET).c
 OBJECTS := $(TARGET).o
 OUTPUT_DIR := test_files/output
@@ -33,4 +33,4 @@ clean:
 	rm -f $(TARGET) $(OBJECTS) $(OUTPUT_DIR)/*
 
 astyle:
-	astyle --style=linux --indent=tab -p -U -K -H --suffix=none ./aes.c
+	astyle --style=linux --indent=tab -p -U -K -H --suffix=none ./aes_gpugg.c
